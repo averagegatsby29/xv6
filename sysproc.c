@@ -102,3 +102,11 @@ sys_halt(void)
     outw(0xB004, 0x2000);
   return 0;
 }
+
+
+// TEST SYSTEM CALL THAT WE WROTE
+int
+sys_stek(void)
+{
+  
+}
