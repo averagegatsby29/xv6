@@ -108,5 +108,6 @@ sys_halt(void)
 int
 sys_stek(void)
 {
-  
+    cprintf("ayy lmao\n");
+    return 0;
 }
