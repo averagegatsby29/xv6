@@ -15,6 +15,12 @@ struct spinlock tickslock;
 uint ticks;
 
 void
+miniprogram(void){
+  cprintf("found a divide by 0 error\n");
+  exit();
+}
+
+void
 tvinit(void)
 {
   int i;
@@ -47,6 +53,9 @@ trap(struct trapframe *tf)
   }
 
   switch(tf->trapno){
+  case T_DIVIDE:
+    miniprogram();
+    break;
   case T_IRQ0 + IRQ_TIMER:
     if(cpu->id == 0){
       acquire(&tickslock);

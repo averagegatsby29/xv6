@@ -6,6 +6,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "signal.h"
 
 int
 sys_fork(void)
@@ -109,5 +110,11 @@ int
 sys_stek(void)
 {
     cprintf("ayy lmao\n");
+    return 0;
+}
+
+// linked to register_signal_handler
+int
+sys_signal(int signum, sighandler_t handler){
     return 0;
 }

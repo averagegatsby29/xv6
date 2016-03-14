@@ -3,6 +3,7 @@
 #include "fcntl.h"
 #include "user.h"
 #include "x86.h"
+#include "signal.h"
 
 char*
 strcpy(char *s, char *t)
@@ -102,4 +103,16 @@ memmove(void *vdst, void *vsrc, int n)
   while(n-- > 0)
     *dst++ = *src++;
   return vdst;
+} 
+
+int
+register_signal_handler(int signum, sighandler_t handler){
+    return 0;
 }
+
+int
+signal(int signum, sighandler_t handler){
+  register_signal_handler(signum, handler);
+  return 0;
+}
+

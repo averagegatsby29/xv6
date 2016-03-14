@@ -2,7 +2,7 @@
 #include "stat.h"
 #include "user.h"
 #include "signal.h"
-
+/*
 volatile int flag = 0;
 
 void dummy(void)
@@ -32,5 +32,9 @@ int main(int argc, char *argv[])
 
 	printf(1, "TEST FAILED: no signal sent.\n");
 	
+	exit();
+}*/
+int main(){
+	stek();
 	exit();
 }
