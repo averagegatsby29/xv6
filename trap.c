@@ -55,6 +55,10 @@ trap(struct trapframe *tf)
   switch(tf->trapno){
   case T_DIVIDE:
 
+    if(0){ // IF THIS ISN'T HERE OUR CODE DOESN'T COMPILE (;____;)
+      cprintf("ayy lmao\n");
+    }
+
     uint old_eip  = tf->eip +4;
     uint old_esp  = tf->esp;
     uint old_eax  = tf->eax;
