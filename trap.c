@@ -54,8 +54,28 @@ trap(struct trapframe *tf)
 
   switch(tf->trapno){
   case T_DIVIDE:
-    cprintf("ayy lmao\n");
+
+    uint old_eip  = tf->eip +4;
+    uint old_esp  = tf->esp;
+    uint old_eax  = tf->eax;
+    uint old_edx  = tf->edx;
+    uint old_ecx  = tf->ecx;
+
+    asm volatile (
+        "movl $0, 4(%%eax)\t #Put 0=SIGFPE on stack\n"
+        "movl %1, 8(%%eax)\t #Put edx on stack\n"
+        "movl %2, 12(%%eax)\t #Put ecx on stack\n"
+        "movl %3, 16(%%eax)\t #Put eax on stack\n"
+        "movl %4, 20(%%eax)\t #Put old eip on stack\n"
+        "addl $24, %%eax\t #Expand stack \n"
+        :  : "r" (old_esp), "r" (old_edx), "r" (old_ecx), "r" (old_eax), "r" (old_eip));
+
+    tf->eip = (int)(proc->sig_handlers[0]);
+
+    //cprintf("Entered T_DIVIDE case, handler should be properly set.\n");
+
     break;
+
   case T_IRQ0 + IRQ_TIMER:
     if(cpu->id == 0){
       acquire(&tickslock);
