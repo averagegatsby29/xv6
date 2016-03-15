@@ -120,3 +120,16 @@ sys_register_signal_handler(void){
   sighandler_t handler = (sighandler_t)defhandler;
   return register_signal_handler(signum, handler);
 }
+
+int
+sys_alarm(void)
+{
+  int ticks;
+
+  if(argint(0, &ticks) < 0)
+    return -1;
+
+  proc->alarmticks = ticks * 5;
+  proc->alarmed = ALRM_NOTACTIVATED;
+  return 0;
+}

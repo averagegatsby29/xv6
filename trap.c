@@ -80,6 +80,9 @@ trap(struct trapframe *tf)
 
     break;
 
+
+
+
   case T_IRQ0 + IRQ_TIMER:
     if(cpu->id == 0){
       acquire(&tickslock);
@@ -88,7 +91,20 @@ trap(struct trapframe *tf)
       release(&tickslock);
     }
     lapiceoi();
+
+    // handle alarm
+
+    if(proc && (tf->cs & 3) == 3 && proc->alarmed == ALRM_NOTACTIVATED){
+      proc->currticks++;
+      cprintf("just incremented currticks\n");
+      if(proc->currticks >= proc->alarmticks){
+        // send SIGALRM
+        proc->currticks = 0;
+        proc->alarmed = ALRM_ACTIVATED;
+      }
+    }
     break;
+
   case T_IRQ0 + IRQ_IDE:
     ideintr();
     lapiceoi();

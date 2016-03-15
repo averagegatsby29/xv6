@@ -2,12 +2,12 @@
 #include "stat.h"
 #include "user.h"
 #include "signal.h"
-/*
+
 volatile int flag = 0;
 
 void dummy(void)
 {
-	printf("TEST FAILED: this should never execute.\n");
+	printf(1, "TEST FAILED: this should never execute.\n");
 }
 
 void handle_signal(siginfo_t info)
@@ -33,4 +33,4 @@ int main(int argc, char *argv[])
 	printf(1, "TEST FAILED: no signal sent.\n");
 	
 	exit();
-}*/
+}

@@ -1,5 +1,10 @@
 #include "signal.h"
 
+// for SIGALRM
+#define ALRM_DEAD         (0)
+#define ALRM_NOTACTIVATED (1)
+#define ALRM_ACTIVATED    (2)
+
 // Segments in proc->gdt.
 #define NSEGS     7
 
@@ -71,6 +76,11 @@ struct proc {
 
   // array of signal handlers for dealing with SIGFPE and SIGALRM
   sighandler_t sig_handlers[2];
+
+  int alarmed;                 // flag for whether we want an alarm to tick for this process
+  int alarmticks;              // the number of ticks needed for SIGALRM
+  int currticks;               // the current number of ticks for this process
+
 };
 
 // Process memory is laid out contiguously, low addresses first:
