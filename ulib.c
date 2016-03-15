@@ -106,13 +106,8 @@ memmove(void *vdst, void *vsrc, int n)
 } 
 
 int
-register_signal_handler(int signum, sighandler_t handler){
-    return 0;
-}
-
-int
-signal(int signum, sighandler_t handler){
+signal(int signum, void* handler){
+  handler = (sighandler_t)handler;
   register_signal_handler(signum, handler);
   return 0;
 }
-

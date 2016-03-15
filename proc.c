@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "signal.h"
 
 struct {
   struct spinlock lock;
@@ -426,6 +427,21 @@ kill(int pid)
   }
   release(&ptable.lock);
   return -1;
+}
+
+int
+register_signal_handler(int signum, void* handler)
+{
+    switch(signum){
+      case SIGFPE:
+        cprintf("it goes in here\n");
+        break;
+      case SIGALRM:
+        break;
+      default:
+        break;
+    }
+    return 0;
 }
 
 //PAGEBREAK: 36

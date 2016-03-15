@@ -73,3 +73,5 @@ struct proc {
 //   original data and bss
 //   fixed-size stack
 //   expandable heap
+
+int register_signal_handler(int signum, void* handler);

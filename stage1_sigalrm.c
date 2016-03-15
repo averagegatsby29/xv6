@@ -34,7 +34,3 @@ int main(int argc, char *argv[])
 	
 	exit();
 }*/
-int main(){
-	stek();
-	exit();
-}

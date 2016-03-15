@@ -104,17 +104,19 @@ sys_halt(void)
   return 0;
 }
 
-
-// TEST SYSTEM CALL THAT WE WROTE
 int
-sys_stek(void)
-{
-    cprintf("ayy lmao\n");
-    return 0;
-}
+sys_register_signal_handler(void){
+  int signum;
+  int defhandler;
 
-// linked to register_signal_handler
-int
-sys_signal(int signum, sighandler_t handler){
-    return 0;
+  if(argint(0, &signum) < 0){
+    return -1;
+  }
+
+  if(argint(1, &defhandler) < 0){
+    return -1;
+  }
+
+  sighandler_t handler = (sighandler_t)defhandler;
+  return register_signal_handler(signum, handler);
 }

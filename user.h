@@ -24,7 +24,8 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int halt(void);
-int stek(void);
+int signal(int, void*);
+int register_signal_handler(int, void*);
 
 // ulib.c
 int stat(char*, struct stat*);
