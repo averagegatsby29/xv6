@@ -52,9 +52,9 @@ endif
 
 # If the makefile can't find QEMU, specify its path here
 #local:
-#QEMU = /usr/bin/qemu-system-i386 
+QEMU = /usr/bin/qemu-system-i386 
 #ilab:
-QEMU = /ilab/users/wkatsak/qemu-1.7.0/i386-softmmu/qemu-system-i386 
+#QEMU = /ilab/users/wkatsak/qemu-1.7.0/i386-softmmu/qemu-system-i386 
 
 # Try to infer the correct QEMU
 ifndef QEMU

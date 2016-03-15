@@ -103,6 +103,9 @@ trap(struct trapframe *tf)
         proc->alarmed = ALRM_ACTIVATED;
       }
     }
+
+
+
     break;
 
   case T_IRQ0 + IRQ_IDE:
@@ -151,9 +154,32 @@ trap(struct trapframe *tf)
 
   // Force process to give up CPU on clock tick.
   // If interrupts were on while locks held, would need to check nlock.
-  if(proc && proc->state == RUNNING && tf->trapno == T_IRQ0+IRQ_TIMER)
+  if(proc && proc->state == RUNNING && tf->trapno == T_IRQ0+IRQ_TIMER && (tf->cs&3) == DPL_USER){
     yield();
+    if(proc->alarmed == ALRM_ACTIVATED){ 
+          //cprintf("ayy lmao it worked\n");
+          proc->alarmed = ALRM_DEAD;
 
+        uint old_eip  = tf->eip +4;
+        uint old_esp  = tf->esp;
+        uint old_eax  = tf->eax;
+        uint old_edx  = tf->edx;
+        uint old_ecx  = tf->ecx;
+
+        asm volatile (
+            "movl $1, 4(%%eax)\t #Put 1=SIGALRM on stack\n" 
+            "movl %1, 8(%%eax)\t #Put edx on stack\n"
+            "movl %2, 12(%%eax)\t #Put ecx on stack\n"
+            "movl %3, 16(%%eax)\t #Put eax on stack\n"
+            "movl %4, 20(%%eax)\t #Put old eip on stack\n"
+            "addl $24, %%eax\t #Expand stack \n"
+            :  : "r" (old_esp), "r" (old_edx), "r" (old_ecx), "r" (old_eax), "r" (old_eip));
+
+        tf->eip = (int)(proc->sig_handlers[SIGALRM]);
+
+      //cprintf("Entered SIGALRM case, handler should be properly set.\n");
+      }
+  }
   // Check if the process has been killed since we yielded
   if(proc && proc->killed && (tf->cs&3) == DPL_USER)
     exit();
