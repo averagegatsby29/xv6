@@ -55,16 +55,13 @@ trap(struct trapframe *tf)
   switch(tf->trapno){
   case T_DIVIDE:
 
-    if(0){ // IF THIS ISN'T HERE OUR CODE DOESN'T COMPILE (;____;)
-      cprintf("ayy lmao\n");
-    }
-
     uint old_eip  = tf->eip +4;
     uint old_esp  = tf->esp;
     uint old_eax  = tf->eax;
     uint old_edx  = tf->edx;
     uint old_ecx  = tf->ecx;
 
+    
     asm volatile (
         "movl $0, 4(%%eax)\t #Put 0=SIGFPE on stack\n"
         "movl %1, 8(%%eax)\t #Put edx on stack\n"
@@ -73,6 +70,7 @@ trap(struct trapframe *tf)
         "movl %4, 20(%%eax)\t #Put old eip on stack\n"
         "addl $24, %%eax\t #Expand stack \n"
         :  : "r" (old_esp), "r" (old_edx), "r" (old_ecx), "r" (old_eax), "r" (old_eip));
+        
 
     tf->eip = (int)(proc->sig_handlers[0]);
 
@@ -159,13 +157,14 @@ trap(struct trapframe *tf)
     if(proc->alarmed == ALRM_ACTIVATED){ 
           //cprintf("ayy lmao it worked\n");
           proc->alarmed = ALRM_DEAD;
-
+        
         uint old_eip  = tf->eip +4;
         uint old_esp  = tf->esp;
         uint old_eax  = tf->eax;
         uint old_edx  = tf->edx;
         uint old_ecx  = tf->ecx;
 
+        
         asm volatile (
             "movl $1, 4(%%eax)\t #Put 1=SIGALRM on stack\n" 
             "movl %1, 8(%%eax)\t #Put edx on stack\n"
@@ -174,6 +173,7 @@ trap(struct trapframe *tf)
             "movl %4, 20(%%eax)\t #Put old eip on stack\n"
             "addl $24, %%eax\t #Expand stack \n"
             :  : "r" (old_esp), "r" (old_edx), "r" (old_ecx), "r" (old_eax), "r" (old_eip));
+            
 
         tf->eip = (int)(proc->sig_handlers[SIGALRM]);
 
