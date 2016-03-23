@@ -129,7 +129,7 @@ sys_alarm(void)
   if(argint(0, &ticks) < 0)
     return -1;
 
-  proc->alarmticks = ticks * 5;
+  proc->alarmticks = ticks * 10;
   proc->alarmed = ALRM_NOTACTIVATED;
   return 0;
 }
