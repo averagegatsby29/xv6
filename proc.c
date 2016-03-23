@@ -102,6 +102,9 @@ userinit(void)
   p->tf->esp = PGSIZE;
   p->tf->eip = 0;  // beginning of initcode.S
 
+  p->sig_handlers[0] = 0;
+  p->sig_handlers[1] = 0;
+
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
 
@@ -472,9 +475,6 @@ procdump(void)
 }
 
 
-
-
-
 int
 register_signal_handler(int signum, void* handler)
 {
@@ -491,5 +491,6 @@ register_signal_handler(int signum, void* handler)
         cprintf("bad signal\n");
         break;
     }
+
     return 0;
 }
