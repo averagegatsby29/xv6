@@ -481,11 +481,11 @@ register_signal_handler(int signum, void* handler)
     switch(signum){
       case SIGFPE:
         proc->sig_handlers[signum] = (sighandler_t)handler;
-        //cprintf("just associated the SIGFPE handler with SIGFPE\n");
+        cprintf("just associated the SIGFPE handler with SIGFPE\n");
         break;
       case SIGALRM:
         proc->sig_handlers[signum] = (sighandler_t)handler;
-        //cprintf("just associated the SIGALRM handler with SIGALRM\n");
+        cprintf("just associated the SIGALRM handler with SIGALRM\n");
         break;
       default:
         cprintf("bad signal\n");
