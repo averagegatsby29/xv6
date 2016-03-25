@@ -64,7 +64,7 @@ trap(struct trapframe *tf)
       kill(proc->pid);
     }
 
-    uint old_eip  = tf->eip;
+    uint old_eip  = tf->eip-8;
     uint old_eax  = tf->eax;
     uint old_edx  = tf->edx;
     uint old_ecx  = tf->ecx;
@@ -104,8 +104,6 @@ trap(struct trapframe *tf)
         proc->alarmed = ALRM_ACTIVATED;
       }
     }
-
-
 
     break;
 
