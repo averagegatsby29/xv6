@@ -64,24 +64,20 @@ trap(struct trapframe *tf)
       kill(proc->pid);
     }
 
-    uint old_eip  = tf->eip +4;
-    uint old_esp  = tf->esp;
+    uint old_eip  = tf->eip;
     uint old_eax  = tf->eax;
     uint old_edx  = tf->edx;
     uint old_ecx  = tf->ecx;
 
-    
-    asm volatile (
-        "movl $0, 4(%%eax)\t #Put 0=SIGFPE on stack\n"
-        "movl %1, 8(%%eax)\t #Put edx on stack\n"
-        "movl %2, 12(%%eax)\t #Put ecx on stack\n"
-        "movl %3, 16(%%eax)\t #Put eax on stack\n"
-        "movl %4, 20(%%eax)\t #Put old eip on stack\n"
-        "addl $24, %%eax\t #Expand stack \n"
-        :  : "r" (old_esp), "r" (old_edx), "r" (old_ecx), "r" (old_eax), "r" (old_eip));
-        
-
-    tf->eip = (int)(proc->sig_handlers[SIGFPE]);
+    *((uint*)(proc->tf->esp-4)) = old_eip;
+    *((uint*)(proc->tf->esp-8)) = old_eax;
+    *((uint*)(proc->tf->esp-12)) = old_ecx;
+    *((uint*)(proc->tf->esp-16)) = old_edx;
+    *((uint*)(proc->tf->esp-20)) = SIGFPE;
+    *((uint*)(proc->tf->esp-24)) = proc->trampoline_addr;
+    //*((uint*)(proc->tf->esp-28)) = (uint)proc->pop;
+    tf->esp = tf->esp-24;
+    tf->eip = (uint)(proc->sig_handlers[SIGFPE]);
 
     break;
 
@@ -170,26 +166,23 @@ trap(struct trapframe *tf)
       }
 
 
-      proc->alarmed = ALRM_DEAD;
-        
-      uint old_eip  = tf->eip +4;
-      uint old_esp  = tf->esp;
+        proc->alarmed = ALRM_DEAD;
+          
+      uint old_eip  = tf->eip;
       uint old_eax  = tf->eax;
       uint old_edx  = tf->edx;
       uint old_ecx  = tf->ecx;
 
-      
-      asm volatile (
-          "movl $1, 4(%%eax)\t #Put 1=SIGALRM on stack\n" 
-          "movl %1, 8(%%eax)\t #Put edx on stack\n"
-          "movl %2, 12(%%eax)\t #Put ecx on stack\n"
-          "movl %3, 16(%%eax)\t #Put eax on stack\n"
-          "movl %4, 20(%%eax)\t #Put old eip on stack\n"
-          "addl $24, %%eax\t #Expand stack \n"
-          :  : "r" (old_esp), "r" (old_edx), "r" (old_ecx), "r" (old_eax), "r" (old_eip));
-          
+      *((uint*)(proc->tf->esp-4)) = old_eip;
+      *((uint*)(proc->tf->esp-8)) = old_eax;
+      *((uint*)(proc->tf->esp-12)) = old_ecx;
+      *((uint*)(proc->tf->esp-16)) = old_edx;
+      *((uint*)(proc->tf->esp-20)) = SIGALRM;
+      *((uint*)(proc->tf->esp-24)) = proc->trampoline_addr;
+      //*((uint*)(proc->tf->esp-28)) = (uint)proc->pop;
+      tf->esp = tf->esp-24;
+      tf->eip = (uint)(proc->sig_handlers[SIGALRM]);
 
-      tf->eip = (int)(proc->sig_handlers[SIGALRM]);
     }
   }
   // Check if the process has been killed since we yielded

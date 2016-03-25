@@ -77,6 +77,8 @@ struct proc {
   // array of signal handlers for dealing with SIGFPE and SIGALRM
   sighandler_t sig_handlers[2];
 
+  uint trampoline_addr;
+
   int alarmed;                 // flag for whether we want an alarm to tick for this process
   int alarmticks;              // the number of ticks needed for SIGALRM
   int currticks;               // the current number of ticks for this process
@@ -89,4 +91,4 @@ struct proc {
 //   fixed-size stack
 //   expandable heap
 
-int register_signal_handler(int signum, void* handler);
+int register_signal_handler(int signum, void* handler, uint trampoline);

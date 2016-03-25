@@ -476,8 +476,12 @@ procdump(void)
 
 
 int
-register_signal_handler(int signum, void* handler)
+register_signal_handler(int signum, void* handler, uint trampoline_addr)
 {
+
+  proc->trampoline_addr = trampoline_addr;
+
+
     switch(signum){
       case SIGFPE:
         proc->sig_handlers[signum] = (sighandler_t)handler;

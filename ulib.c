@@ -106,10 +106,24 @@ memmove(void *vdst, void *vsrc, int n)
 } 
 
 
+void 
+trampoline(void){
+  __asm__(
+    "add $8, %esp;"
+    "pop %edx;"
+    "pop %ecx;"
+    "pop %eax;"
+    "ret");
+}
+
+
 int
 signal(int signum, void* handler){
 
+  void (*trampoline_addr)() = &trampoline;
+
+
   handler = (sighandler_t)handler;
-  register_signal_handler(signum, handler);
+  register_signal_handler(signum, handler, trampoline_addr);
   return 0;
 }
