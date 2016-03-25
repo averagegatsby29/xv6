@@ -71,6 +71,10 @@ found:
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
 
+  // initialize sighandlers
+  p->sig_handlers[0] = 0;
+  p->sig_handlers[1] = 0;
+
   // initialize alarm parameters
   p->alarmed = ALRM_DEAD;
   p->alarmticks = 0;
@@ -101,9 +105,6 @@ userinit(void)
   p->tf->eflags = FL_IF;
   p->tf->esp = PGSIZE;
   p->tf->eip = 0;  // beginning of initcode.S
-
-  p->sig_handlers[0] = 0;
-  p->sig_handlers[1] = 0;
 
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");

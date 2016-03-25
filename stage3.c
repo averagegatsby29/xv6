@@ -10,7 +10,7 @@ void dummy(void)
 	printf(1, "TEST FAILED: this should never execute.\n");
 }
 
-int handle_signal(int signum)
+void handle_signal(int signum)
 {
 	static int counter;
 
@@ -18,10 +18,9 @@ int handle_signal(int signum)
 	printf(1, "%d\n", counter);
 
 	if(counter >= REPEATS){
-		// Skip the instruction causing SIGFPE
+	    int* ptr = &signum;
+	    (*ptr) += 2;
 	}
-
-	return -1;
 }
 
 int main(int argc, char *argv[])
@@ -32,9 +31,10 @@ int main(int argc, char *argv[])
 	int y = 0;
 
 	signal(SIGFPE, handle_signal);
+	
 
-	while(1);
-		x = x / y;
+
+	x = x / y;
 	
 	printf(1, "Traps Performed: XXXX\n");
 	printf(1, "Total Elapsed Time: XXXX\n");
