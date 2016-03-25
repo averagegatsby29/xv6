@@ -13,7 +13,6 @@ void handle_signal(int signum)
 	static int counter;
 	counter++;
 	printf(1, "%d\n", counter);
-
 }
 
 int main(int argc, char *argv[])
