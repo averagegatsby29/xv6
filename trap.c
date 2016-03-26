@@ -97,7 +97,7 @@ trap(struct trapframe *tf)
 
     if(proc && (tf->cs & 3) == 3 && proc->alarmed == ALRM_NOTACTIVATED){
       proc->currticks++;
-      cprintf("just incremented currticks\n");
+      // cprintf("just incremented currticks\n");
       if(proc->currticks >= proc->alarmticks){
         // send SIGALRM
         proc->currticks = 0;
