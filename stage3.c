@@ -25,6 +25,7 @@ void handle_signal(int signum)
 int main(int argc, char *argv[])
 {
 	// We could use REPEATS here but we hard-coded this for readability
+	printf(1, "Timing of average cost is in microticks (see readme)\n");
 	printf(1, "Running handler 1,000,000 times...\n\n");
 
 	int start = uptime();
@@ -38,11 +39,11 @@ int main(int argc, char *argv[])
 	int finish = uptime();
 	int duration = finish - start;
 	
-	printf(1, "Traps Performed: 1,000,000\n");	// see comment @line 30
-	printf(1, "Total Elapsed Time: %d ticks\n", duration);
-	printf(1, "Average Time Per Trap: %d microticks\n", duration);
-	printf(1, "(a microtick is defined as one one-millionth of a tick)\n");
-	printf(1, "\nAssuming 1 tick ~ 1 ms, trap cost is about 0.%d ms.\n", duration);
+	printf(1, "Traps Performed: 1,000,000\n");	// see comment @line 27
+	printf(1, "Total Elapsed Time: %d\n", duration);
+	printf(1, "Average Time Per Trap: %d\n", duration);
+	// printf(1, "(a microtick is defined as one one-millionth of a tick)\n");
+	// printf(1, "\nAssuming 1 tick ~ 1 ms, trap cost is about 0.%d ms.\n", duration);
 
 	exit();
 }
