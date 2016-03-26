@@ -3,7 +3,7 @@
 #include "user.h"
 #include "signal.h"
 
-#define REPEATS	10
+#define REPEATS	1000000 // 1 million
 
 void dummy(void)
 {
@@ -15,30 +15,34 @@ void handle_signal(int signum)
 	static int counter;
 
 	counter++;
-	printf(1, "%d\n", counter);
 
 	if(counter >= REPEATS){
-	    int* ptr = &signum;
-	    (*ptr) += 2;
+	    int* ptr = &signum + 4;
+	    (*ptr) += 4;
 	}
 }
 
 int main(int argc, char *argv[])
 {
-	// int start = uptime();
+	// We could use REPEATS here but we hard-coded this for readability
+	printf(1, "Running handler 1,000,000 times...\n\n");
 
+	int start = uptime();
+
+	// SIGFPE code
 	int x = 5;
 	int y = 0;
-
 	signal(SIGFPE, handle_signal);
-	
-
-
 	x = x / y;
+
+	int finish = uptime();
+	int duration = finish - start;
 	
-	printf(1, "Traps Performed: XXXX\n");
-	printf(1, "Total Elapsed Time: XXXX\n");
-	printf(1, "Average Time Per Trap: XXXXX\n");
+	printf(1, "Traps Performed: 1,000,000\n");	// see comment @line 30
+	printf(1, "Total Elapsed Time: %d ticks\n", duration);
+	printf(1, "Average Time Per Trap: %d microticks\n", duration);
+	printf(1, "(a microtick is defined as one one-millionth of a tick)\n");
+	printf(1, "\nAssuming 1 tick ~ 1 ms, trap cost is about 0.%d ms.\n", duration);
 
 	exit();
 }
