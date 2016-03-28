@@ -10,14 +10,14 @@ void dummy(void)
 	printf(1, "TEST FAILED: this should never execute.\n");
 }
 
-void handle_signal(int signum)
+void handle_signal(siginfo_t info)
 {
 	static int counter;
 
 	counter++;
 
 	if(counter >= REPEATS){
-	    int* ptr = &signum + 4;
+	    int* ptr = &(info.signum) + 4;
 	    (*ptr) += 4;
 	}
 }
